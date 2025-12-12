@@ -1,1 +1,4 @@
 notebooks/*
+commit-message.txt
+
+*.DS_Store

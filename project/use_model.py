@@ -8,7 +8,9 @@ from dataset_transform import zeek_snort_only, del_cheater_features
 import joblib
 from torch.utils.data import DataLoader, Dataset
 
-df = pd.read_csv("/workspace/CIC-IDS18/03-02-2018.csv")
+device = "cuda" if torch.cuda.is_available() else ("mps" if torch.mps.is_available() else "cpu")
+
+df = pd.read_csv("./files/Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv")
 
 from df2018_to_2017 import convert_to_second_format
 df_to_2017 = convert_to_second_format(df)
@@ -17,7 +19,8 @@ from dataset_transform import zeek_snort_only, del_cheater_features
 df_t = zeek_snort_only(df_to_2017)
 df_t = del_cheater_features(df_t)
 
-models_names = os.listdir("/workspace/files/neuro_invasion_detector/models3")
+model_dir = "models"
+models_names = os.listdir(model_dir)
 
 class MegaModel(nn.Module):
     def __init__(self):
@@ -25,7 +28,7 @@ class MegaModel(nn.Module):
         self.models = []
         for model in models_names:
             try:
-                self.models.append(torch.load(os.path.join( f'/workspace/files/neuro_invasion_detector/models3/{model}', 'transformer_model.pth'), weights_only=False))
+                self.models.append(torch.load(os.path.join( f'{model_dir}/{model}', 'transformer_model.pth'), weights_only=False))
             except Exception:
                 pass
     
@@ -116,4 +119,4 @@ def test_mega_model(MODEL_SAVE_DIR, df: pd.DataFrame, device='cuda'):
                     print("Benign")
             
 
-test_mega_model(f'/workspace/files/neuro_invasion_detector/models3/{'Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX'}', df_t)
+test_mega_model(f'{model_dir}/{'Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX'}', df_t, device=device)
