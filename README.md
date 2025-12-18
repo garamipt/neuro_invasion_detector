@@ -102,3 +102,13 @@ python use_model.py
 
 * Код поддерживает CUDA (`device='cuda'`), Apple MPS (`torch.mps`) и CPU. В `main.py` и `use_model.py` присутствует выбор устройства через `torch.cuda.is_available()` / `torch.mps.is_available()`.
 * Для больших батчей (`BATCH_SIZE = 1024`) рекомендуется запуск на GPU с достаточной видеопамятью — иначе уменьшите `BATCH_SIZE`.
+
+## Результаты исследования
+
+### Сравнение f1-score
+
+|Модель     |f1-score|
+|-----------|--------|
+|Наша модель      |  0,93  |
+|Snort (2017-2018)|  0,75  |
+|Zeek  (2017-2018)|  0,92  |
